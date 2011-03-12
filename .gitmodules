@@ -1,0 +1,3 @@
+[submodule "modules/subversion"]
+	path = modules/subversion
+	url = git@github.com:mattbowen/puppet-subversion.git
