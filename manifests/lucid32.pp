@@ -41,16 +41,7 @@ class vcs {
 
 }
 
-class { "update":stage => "update"}
-class { "python": stage => "pre" }
-class { "pildeps": stage => "pre" }
-class { "vcs": stage => "pre" }
-
-class lucid32 {
-  include python
-  include pildeps
-  include vcs
-
+class buildpythons {
   subversion::working-copy {
     "buildout":
       path => "/opt/python",
@@ -59,7 +50,23 @@ class lucid32 {
       group => "vagrant",
       repo_base => "svn.plone.org/svn/collective",
       require => Package["python-setuptools"];
+  }
+  exec { "/usr/bin/python2.6 /opt/python/bootstrap.py && /opt/python/bin/buildout":
+      creates => "/opt/python/bin/buildout",
+  }
+
 }
+class { "aptupdate": stage => "update"}
+class { "python": stage => "pre" }
+class { "pildeps": stage => "pre" }
+class { "vcs": stage => "pre" }
+
+class lucid32 {
+  include aptupdate
+  include python
+  include pildeps
+  include vcs
+  include buildpythons
   
 
 }
