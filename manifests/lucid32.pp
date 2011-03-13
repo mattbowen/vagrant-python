@@ -1,3 +1,4 @@
+Exec{path=>"/usr/bin:/usr/sbin"}
 stage { "update": before => Stage["pre"] }
 stage { "pre": before => Stage["main"] }
 
@@ -46,13 +47,19 @@ class buildpythons {
     "buildout":
       path => "/opt/python",
       branch => "python/",
-      owner => "vagrant",
-      group => "vagrant",
+      owner => "root",
+      group => "root",
       repo_base => "svn.plone.org/svn/collective",
       require => Package["python-setuptools"];
   }
   exec { "/usr/bin/python2.6 /opt/python/bootstrap.py && /opt/python/bin/buildout":
-      creates => "/opt/python/bin/buildout",
+      user => "root",
+      cwd => "/opt/python",
+      path => "/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin",
+      timeout => 7200,
+#      creates => "/opt/python/bin/buildout",
+      logoutput => true,
+      
   }
 
 }
