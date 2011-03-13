@@ -12,6 +12,10 @@ class python {
         "python": ensure => "2.6.5-0ubuntu1";
         "python-dev": ensure => "2.6.5-0ubuntu1";
         "python-setuptools": ensure => installed;
+	"libreadline5-dev": ensure => present;
+	"zlib1g-dev": ensure => present;
+	"libbz2-dev": ensure => present;
+	"libjpeg62-dev": ensure => present;
 	"libssl-dev": ensure => present;
 	"python-openssl": ensure => present;
 	"sqlite3": ensure => present;
@@ -41,8 +45,7 @@ class vcs {
   }
 
 }
-
-class buildpythons {
+class checkoutbuildout {
   subversion::working-copy {
     "buildout":
       path => "/opt/python",
@@ -52,13 +55,19 @@ class buildpythons {
       repo_base => "svn.plone.org/svn/collective",
       require => Package["python-setuptools"];
   }
-  exec { "/usr/bin/python2.6 /opt/python/bootstrap.py && /opt/python/bin/buildout":
+}
+
+class buildpythons {
+  include checkoutbuildout
+  exec { "/usr/bin/python2.6 /opt/python/bootstrap.py --distribute  && /opt/python/bin/buildout":
       user => "root",
       cwd => "/opt/python",
       path => "/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin",
       timeout => 7200,
-#      creates => "/opt/python/bin/buildout",
-      logoutput => true,
+      require => Class["checkoutbuildout"],
+      require => Class["python"],
+      creates => "/opt/python/bin/buildout",
+      logoutput => on_failure,
       
   }
 
