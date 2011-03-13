@@ -13,9 +13,6 @@ class python {
         "python-dev": ensure => "2.6.5-0ubuntu1";
         "python-setuptools": ensure => installed;
 	"libreadline5-dev": ensure => present;
-	"zlib1g-dev": ensure => present;
-	"libbz2-dev": ensure => present;
-	"libjpeg62-dev": ensure => present;
 	"libssl-dev": ensure => present;
 	"python-openssl": ensure => present;
 	"sqlite3": ensure => present;
@@ -31,6 +28,7 @@ class python {
 
 class pildeps {
   package { 
+  "libbz2-dev": ensure => present;
   "zlib1g-dev": ensure => present;
   "libfreetype6-dev": ensure => present;
   "libjpeg62-dev": ensure => present;
@@ -64,8 +62,7 @@ class buildpythons {
       cwd => "/opt/python",
       path => "/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin",
       timeout => 7200,
-      require => Class["checkoutbuildout"],
-      require => Class["python"],
+      require => [Class["checkoutbuildout"],Class["python"],Class["pildeps"]],
       creates => "/opt/python/bin/buildout",
       logoutput => on_failure,
       
