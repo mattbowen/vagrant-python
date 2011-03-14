@@ -47,7 +47,7 @@ class checkoutbuildout {
   subversion::working-copy {
     "buildout":
       path => "/opt/python",
-      branch => "python/",
+      branch => "bda-naked-python/",
       owner => "root",
       group => "root",
       repo_base => "svn.plone.org/svn/collective",
@@ -57,7 +57,7 @@ class checkoutbuildout {
 
 class buildpythons {
   include checkoutbuildout
-  exec { "/usr/bin/python2.6 /opt/python/bootstrap.py --distribute  && /opt/python/bin/buildout":
+  exec { "/usr/bin/python2.6 /opt/python/bootstrap.py --distribute  && /opt/python/bin/buildout -c all.cfg":
       user => "root",
       cwd => "/opt/python",
       path => "/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin",
